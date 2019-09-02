@@ -14,6 +14,6 @@ public interface OrderEntityRepository extends JpaRepository<OrderEntity,Integer
 
 
     @Query(value = "select COUNT(1) from chengsheng_order where GET_GOODS_DATE =:getGoodsDate", nativeQuery = true)
-    Integer findNoByGetDate(@Param("getGoodsDate")Date getGoodsDate);
+    Integer findNoByGetDate(@Param("getGoodsDate")String getGoodsDate);
 
 }
