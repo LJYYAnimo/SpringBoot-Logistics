@@ -19,14 +19,14 @@
                 <label class="beg-login-icon">
                     <i class="layui-icon">&#xe612;</i>
                 </label>
-                <input type="text" name="adminName" lay-verify="required" autocomplete="off" placeholder="请输入用户名（必填）" class="layui-input">
+                <input type="text" name="userName" lay-verify="required" autocomplete="off" placeholder="请输入用户名（必填）" class="layui-input">
             </div>
 
             <div class="layui-form-item">
                 <label class="beg-login-icon">
                     <i class="layui-icon">&#xe642;</i>
                 </label>
-                <input type="password" name="adminPwd" lay-verify="required"  placeholder="请输入密码（必填）" autocomplete="off" class="layui-input">
+                <input type="password" name="password" lay-verify="required"  placeholder="请输入密码（必填）" autocomplete="off" class="layui-input">
             </div>
 
             <div class="layui-form-item">
@@ -48,10 +48,19 @@
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/layui/layui.js"></script>
 <script type="text/javascript" src="/js/qs.js"></script>
+<script type="text/javascript" src="/js/axios.min.js"></script>
+
 <script type="text/javascript">
     layui.use('form', function(){
         var form = layui.form;
         form.on('submit(formDemo)', function(data){
+            axios.post('/login', JSON.stringify(data.field))
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
             layer.msg(JSON.stringify(data.field));
             return false;
         });
