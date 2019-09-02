@@ -13,10 +13,10 @@ import java.util.Objects;
  * @author 刘金泳
  * @Date 2019/9/2
  */
-@Entity
+@Entity(name = "order")
 @Table(name = "chengsheng_order", schema = "chengsheng", catalog = "")
 public class OrderEntity {
-    private int id;
+    private Integer id;
     private String customerName;
     private String customerTel;
     private String orderNo;
@@ -37,15 +37,16 @@ public class OrderEntity {
 
     @Convert(converter = ProjectEnumConverter.class)
     private ProjectEnum remove;
+
     private String remark;
 
     @Id
     @Column(name = "ID")
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

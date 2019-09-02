@@ -18,6 +18,7 @@ public class ProjectEnumConverter implements AttributeConverter<ProjectEnum,Inte
      */
     @Override
     public Integer convertToDatabaseColumn(ProjectEnum projectEnums) {
+        System.out.println("将枚举转换成数据库列");
         return projectEnums.getCode();
     }
 
