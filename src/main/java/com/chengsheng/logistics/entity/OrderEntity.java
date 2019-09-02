@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -23,7 +24,7 @@ public class OrderEntity {
     private String orderNo;
     private String invoiceType;
     private String invoiceNo;
-    private Timestamp getGoodsDate;
+    private Date getGoodsDate;
     private BigDecimal totalAmount;
     private Integer payStatus;
     private BigDecimal paidAmount;
@@ -98,11 +99,11 @@ public class OrderEntity {
 
     @Basic
     @Column(name = "GET_GOODS_DATE")
-    public Timestamp getGetGoodsDate() {
+    public Date getGetGoodsDate() {
         return getGoodsDate;
     }
 
-    public void setGetGoodsDate(Timestamp getGoodsDate) {
+    public void setGetGoodsDate(Date getGoodsDate) {
         this.getGoodsDate = getGoodsDate;
     }
 
