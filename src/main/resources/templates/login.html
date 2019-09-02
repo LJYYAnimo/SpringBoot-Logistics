@@ -54,7 +54,7 @@
     layui.use('form', function(){
         var form = layui.form;
         form.on('submit(formDemo)', function(data){
-            axios.post('/login', JSON.stringify(data.field))
+            axios.post('/login', Qs.stringify(data.field))
             .then(function (response) {
                 console.log(response);
             })
