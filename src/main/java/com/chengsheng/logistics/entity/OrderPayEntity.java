@@ -1,5 +1,8 @@
 package com.chengsheng.logistics.entity;
 
+import com.chengsheng.logistics.converter.ProjectEnumConverter;
+import com.chengsheng.logistics.enums.ProjectEnum;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -7,7 +10,7 @@ import java.util.Objects;
 
 /**
  * @author 刘金泳
- * @Date 2019/8/30
+ * @Date 2019/9/2
  */
 @Entity
 @Table(name = "chengsheng_order_pay", schema = "chengsheng", catalog = "")
@@ -22,7 +25,10 @@ public class OrderPayEntity {
     private Timestamp createTime;
     private Integer updateId;
     private Timestamp updateTime;
-    private int remove;
+
+    @Convert(converter = ProjectEnumConverter.class)
+    private ProjectEnum remove;
+
     private String remark;
 
     @Id
@@ -127,11 +133,11 @@ public class OrderPayEntity {
 
     @Basic
     @Column(name = "REMOVE")
-    public int getRemove() {
+    public ProjectEnum getRemove() {
         return remove;
     }
 
-    public void setRemove(int remove) {
+    public void setRemove(ProjectEnum remove) {
         this.remove = remove;
     }
 

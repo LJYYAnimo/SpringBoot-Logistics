@@ -9,7 +9,7 @@ import javax.persistence.AttributeConverter;
  * @author 刘金泳
  * @Date 2019/8/30
  */
-public class ProjectEunmsConverter implements AttributeConverter<ProjectEnum,Integer> {
+public class ProjectEnumConverter implements AttributeConverter<ProjectEnum,Integer> {
 
     /**
      * 将枚举转换成数据库列

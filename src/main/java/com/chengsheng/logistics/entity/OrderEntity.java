@@ -1,22 +1,19 @@
 package com.chengsheng.logistics.entity;
 
-import com.chengsheng.logistics.converter.ProjectEunmsConverter;
+import com.chengsheng.logistics.converter.ProjectEnumConverter;
 import com.chengsheng.logistics.enums.ProjectEnum;
-import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Objects;
 
 /**
  * @author 刘金泳
- * @Date 2019/8/30
+ * @Date 2019/9/2
  */
 @Entity
 @Table(name = "chengsheng_order", schema = "chengsheng", catalog = "")
-@DynamicUpdate
 public class OrderEntity {
     private int id;
     private String customerName;
@@ -24,16 +21,20 @@ public class OrderEntity {
     private String orderNo;
     private String invoiceType;
     private String invoiceNo;
-    private Date getGoodsDate;
+    private Timestamp getGoodsDate;
     private BigDecimal totalAmount;
-    private Integer payStatus;
+
+    @Convert(converter = ProjectEnumConverter.class)
+    private ProjectEnum payStatus;
+
     private BigDecimal paidAmount;
     private BigDecimal unpiadAmount;
     private Integer createId;
     private Timestamp createTime;
     private Integer updateId;
     private Timestamp updateTime;
-    @Convert(converter = ProjectEunmsConverter.class)
+
+    @Convert(converter = ProjectEnumConverter.class)
     private ProjectEnum remove;
     private String remark;
 
@@ -99,11 +100,11 @@ public class OrderEntity {
 
     @Basic
     @Column(name = "GET_GOODS_DATE")
-    public Date getGetGoodsDate() {
+    public Timestamp getGetGoodsDate() {
         return getGoodsDate;
     }
 
-    public void setGetGoodsDate(Date getGoodsDate) {
+    public void setGetGoodsDate(Timestamp getGoodsDate) {
         this.getGoodsDate = getGoodsDate;
     }
 
@@ -119,11 +120,11 @@ public class OrderEntity {
 
     @Basic
     @Column(name = "PAY_STATUS")
-    public Integer getPayStatus() {
+    public ProjectEnum getPayStatus() {
         return payStatus;
     }
 
-    public void setPayStatus(Integer payStatus) {
+    public void setPayStatus(ProjectEnum payStatus) {
         this.payStatus = payStatus;
     }
 
@@ -229,29 +230,6 @@ public class OrderEntity {
                 Objects.equals(updateId, that.updateId) &&
                 Objects.equals(updateTime, that.updateTime) &&
                 Objects.equals(remark, that.remark);
-    }
-
-    @Override
-    public String toString() {
-        return "OrderEntity{" +
-                "id=" + id +
-                ", customerName='" + customerName + '\'' +
-                ", customerTel='" + customerTel + '\'' +
-                ", orderNo='" + orderNo + '\'' +
-                ", invoiceType='" + invoiceType + '\'' +
-                ", invoiceNo='" + invoiceNo + '\'' +
-                ", getGoodsDate=" + getGoodsDate +
-                ", totalAmount=" + totalAmount +
-                ", payStatus=" + payStatus +
-                ", paidAmount=" + paidAmount +
-                ", unpiadAmount=" + unpiadAmount +
-                ", createId=" + createId +
-                ", createTime=" + createTime +
-                ", updateId=" + updateId +
-                ", updateTime=" + updateTime +
-                ", remove=" + remove +
-                ", remark='" + remark + '\'' +
-                '}';
     }
 
     @Override

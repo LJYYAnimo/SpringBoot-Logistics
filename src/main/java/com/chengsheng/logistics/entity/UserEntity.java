@@ -1,12 +1,15 @@
 package com.chengsheng.logistics.entity;
 
+import com.chengsheng.logistics.converter.ProjectEnumConverter;
+import com.chengsheng.logistics.enums.ProjectEnum;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
  * @author 刘金泳
- * @Date 2019/8/30
+ * @Date 2019/9/2
  */
 @Entity
 @Table(name = "chengsheng_user", schema = "chengsheng", catalog = "")
@@ -17,7 +20,10 @@ public class UserEntity {
     private String nameCn;
     private String mobile;
     private String tel;
-    private Integer userLevel;
+
+    @Convert(converter = ProjectEnumConverter.class)
+    private ProjectEnum userLevel;
+
     private Integer status;
     private Integer createId;
     private Timestamp createTime;
@@ -25,7 +31,10 @@ public class UserEntity {
     private Timestamp updateTime;
     private Timestamp lastLoginTime;
     private String lastLoginIp;
-    private int remove;
+
+    @Convert(converter = ProjectEnumConverter.class)
+    private ProjectEnum remove;
+
     private String remark;
 
     @Id
@@ -90,11 +99,11 @@ public class UserEntity {
 
     @Basic
     @Column(name = "USER_LEVEL")
-    public Integer getUserLevel() {
+    public ProjectEnum getUserLevel() {
         return userLevel;
     }
 
-    public void setUserLevel(Integer userLevel) {
+    public void setUserLevel(ProjectEnum userLevel) {
         this.userLevel = userLevel;
     }
 
@@ -170,11 +179,11 @@ public class UserEntity {
 
     @Basic
     @Column(name = "REMOVE")
-    public int getRemove() {
+    public ProjectEnum getRemove() {
         return remove;
     }
 
-    public void setRemove(int remove) {
+    public void setRemove(ProjectEnum remove) {
         this.remove = remove;
     }
 
