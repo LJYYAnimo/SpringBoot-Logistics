@@ -120,7 +120,6 @@
         };
 
         $('.delete_animo').bind('click',function () {
-            console.log(this.parentElement);
            this.parentElement.remove();
         });
 
