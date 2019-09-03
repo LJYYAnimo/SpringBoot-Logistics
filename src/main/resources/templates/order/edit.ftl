@@ -34,8 +34,6 @@
                                 <input type="text" class="layui-input" id="getGoodsDate">
                             </div>
                         </div>
-                    </form>
-
                         <table class="layui-table" id="append_table">
                             <#--设置列的宽度
                             <colgroup>
@@ -55,25 +53,26 @@
                                 <th style="text-align: center">金额</th>
                                 <th style="text-align: center">备注</th>
                             </tr>
-                            <tr >
+                            <tr>
                                 <td style="text-align: center" class="delete_animo"><button type="button"><i class="layui-icon">&#xe640;</i></button></td>
                                 <td><input type="text" name="goodsName" class="layui-input"></td>
                                 <td><input type="text" name="goodsDetailInfo" class="layui-input"></td>
-                                <td><input type="text" name="number" class="layui-input"></td>
+                                <td><input type="number" name="number" class="layui-input number"></td>
                                 <td><input type="text" name="weight" class="layui-input"></td>
                                 <td><input type="text" name="pricingMethod" class="layui-input"></td>
-                                <td><input type="text" name="price" class="layui-input"></td>
-                                <td><input type="text" name="subtotalAmount" class="layui-input"></td>
+                                <td><input type="text" name="price" class="layui-input price"></td>
+                                <td><input type="text" name="subtotalAmount" class="layui-input subtotalAmount"></td>
                                 <td><input type="text" name="remark" class="layui-input"></td>
                             </tr>
                         </table>
 
-                        <div class="layui-form-item">
+                        <div class="layui-form-item" style="float: right;margin-top: 10px;">
                             <div class="layui-input-block">
-                                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                <button class="layui-btn" lay-submit lay-filter="formDemo">新增</button>
+                                <#--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
                             </div>
                         </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -104,24 +103,57 @@
             return false;
         });
 
+        // 添加的追加html
         window.append_tr = function () {
             $('#append_table').append('<tr>\n' +
-                    '                                <td style="text-align: center" class="delete_animo"><button type="button""><i class="layui-icon">&#xe640;</i></button></td>\n' +
-                    '                                <td><input type="text" name="goodsName" class="layui-input"></td>\n' +
-                    '                                <td><input type="text" name="goodsDetailInfo" class="layui-input"></td>\n' +
-                    '                                <td><input type="text" name="number" class="layui-input"></td>\n' +
-                    '                                <td><input type="text" name="weight" class="layui-input"></td>\n' +
-                    '                                <td><input type="text" name="pricingMethod" class="layui-input"></td>\n' +
-                    '                                <td><input type="text" name="price" class="layui-input"></td>\n' +
-                    '                                <td><input type="text" name="subtotalAmount" class="layui-input"></td>\n' +
-                    '                                <td><input type="text" name="remark" class="layui-input"></td>\n' +
-                    '                            </tr>');
+                    '<td style="text-align: center" class="delete_animo"><button type="button""><i class="layui-icon">&#xe640;</i></button></td>' +
+                    '<td><input type="text" name="goodsName" class="layui-input"></td>' +
+                    '<td><input type="text" name="goodsDetailInfo" class="layui-input"></td>' +
+                    '<td><input type="number" name="number" class="layui-input number"></td>' +
+                    '<td><input type="text" name="weight" class="layui-input"></td>' +
+                    '<td><input type="text" name="pricingMethod" class="layui-input"></td>' +
+                    '<td><input type="text" name="price" class="layui-input price"></td>' +
+                    '<td><input type="text" name="subtotalAmount" class="layui-input subtotalAmount"></td>' +
+                    '<td><input type="text" name="remark" class="layui-input"></td>' +
+                    '</tr>');
 
         };
 
-        $('.delete_animo').bind('click',function () {
-            console.log(this.parentElement);
-           this.parentElement.remove();
+        // 删除监听事件
+        $("#append_table").on("click",".delete_animo",function () {
+            this.parentElement.remove();
+        });
+
+        // 监听数量输入框失焦
+        $("#append_table").on("blur",".number",function () {
+            var _this = $(this);
+            var number = _this.val();
+            var price = _this.parent().parent().find("td .price").val();
+            // 两个框的值都不为空 并且金额框为空 才触发计算填充
+            if(number != undefined && number.trim() != "" && price != undefined && price.trim() != ""){
+                if(_this.parent().parent().find("td .subtotalAmount").val() != undefined &&
+                        _this.parent().parent().find("td .subtotalAmount").val().trim() != "" &&
+                        _this.parent().parent().find("td .subtotalAmount").val() != null){
+                    return;
+                }
+                _this.parent().parent().find("td .subtotalAmount").val(number*price);
+            }
+        });
+
+        // 监听单价输入框失焦
+        $("#append_table").on("blur",".price",function () {
+            var _this = $(this);
+            var price = _this.val();
+            var number = _this.parent().parent().find("td .number").val();
+            // 两个框的值都不为空 并且金额框为空 才触发计算填充
+            if(number != undefined && number.trim() != "" && price != undefined && price.trim() != ""){
+                if(_this.parent().parent().find("td .subtotalAmount").val() != undefined &&
+                        _this.parent().parent().find("td .subtotalAmount").val().trim() != "" &&
+                        _this.parent().parent().find("td .subtotalAmount").val() != null){
+                    return;
+                }
+                _this.parent().parent().find("td .subtotalAmount").val(number*price);
+            }
         });
 
     });

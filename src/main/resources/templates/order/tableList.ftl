@@ -13,7 +13,6 @@
         <div class="layui-row layui-col-space15">
             <div class="layui-col-md12">
                 <div class="layui-card">
-                    <div class="layui-card-header">* 2M，支持bmp/png/jpeg/jpg/gif格式 * CropImage（传图自动裁剪导致的隐藏图片）</div>
                     <div class="layui-card-body">
                         <table class="layui-hide" id="order-table" lay-filter="order-table"></table>
                     </div>
