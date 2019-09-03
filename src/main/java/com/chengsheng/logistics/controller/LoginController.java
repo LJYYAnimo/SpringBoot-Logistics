@@ -4,8 +4,6 @@ import com.chengsheng.logistics.entity.UserEntity;
 import com.chengsheng.logistics.service.LoginService;
 import com.chengsheng.logistics.vo.ServerResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +15,14 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
+    /**
+     *@description  登陆方法
+     *@params  [userEntity, req]
+     *@return  com.chengsheng.logistics.vo.ServerResponseVo
+     *@author  Gu Yu Long
+     *@date    2019/9/3 9:31
+     *@other
+     */
     @RequestMapping("/login")
     public ServerResponseVo login(UserEntity userEntity, HttpServletRequest req){
         userEntity.setLastLoginIp(getIPAddress(req));
