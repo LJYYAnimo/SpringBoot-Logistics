@@ -293,8 +293,8 @@
             delete orderEntity.price;
             delete orderEntity.subtotalAmount;
             delete orderEntity.remark;
-            postData.orderEntity = orderEntity;
-            postData.goodsList = goodsList;
+            postData.orderEntity = JSON.stringify(orderEntity);
+            postData.goodsList = JSON.stringify(goodsList);
             console.log(postData);
 
             axios.post('/order/save', Qs.stringify(postData))
