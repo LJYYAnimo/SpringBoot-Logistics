@@ -71,6 +71,10 @@ public class OrderServiceImpl implements OrderService {
             if(order != null){
                 // 写入业务编号
                 order.setOrderNo(getOrderNo());
+                // 如果没有状态 默认未付款
+                if(order.getPayStatus() == null){
+                    order.setPayStatus(ProjectEnum.NOT_PAY);
+                }
                 order.setCreateTime(DateUtil.getNowDateTimeStamp());
                 order.setRemove(ProjectEnum.NOT_DELETE);
                 orderEntityRepository.saveAndFlush(order);
