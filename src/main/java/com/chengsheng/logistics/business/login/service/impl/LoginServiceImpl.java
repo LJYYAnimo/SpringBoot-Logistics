@@ -1,16 +1,22 @@
-package com.chengsheng.logistics.service.impl;
+package com.chengsheng.logistics.business.login.service.impl;
 
+import com.chengsheng.logistics.business.login.service.LoginService;
 import com.chengsheng.logistics.entity.UserEntity;
 import com.chengsheng.logistics.repository.UserEntityRepository;
-import com.chengsheng.logistics.service.LoginService;
 import com.chengsheng.logistics.util.DateUtil;
 import com.chengsheng.logistics.util.MD5Util;
 import com.chengsheng.logistics.vo.ServerResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @program: logistics->LoginServiceImpl
+ * @description: 登陆实现层
+ * @author: Gu Yu Long
+ * @date: 2019/09/03 16:54:42
+ **/
 @Service
-public class LoginServiceImpl implements LoginService{
+public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private UserEntityRepository userEntityRepository;

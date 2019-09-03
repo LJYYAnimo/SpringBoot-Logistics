@@ -1,7 +1,7 @@
-package com.chengsheng.logistics.controller;
+package com.chengsheng.logistics.business.login.controller;
 
+import com.chengsheng.logistics.business.login.service.LoginService;
 import com.chengsheng.logistics.entity.UserEntity;
-import com.chengsheng.logistics.service.LoginService;
 import com.chengsheng.logistics.vo.ServerResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @program: logistics->LoginController
+ * @description: 登陆Controller
+ * @author: Gu Yu Long
+ * @date: 2019/09/03 16:52:24
+ **/
 @RestController
 public class LoginController {
 

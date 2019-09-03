@@ -1,12 +1,14 @@
-package com.chengsheng.logistics.controller;
+package com.chengsheng.logistics.business.view.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
- * @author 刘金泳
- * @Date 2019/9/2
- */
+ * @program: logistics->ViewController
+ * @description: 视图控制器
+ * @author: Gu Yu Long
+ * @date: 2019/09/03 16:53:25
+ **/
 @Controller
 public class ViewController {
 
