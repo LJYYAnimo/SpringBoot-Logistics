@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -71,16 +72,35 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ServerResponseVo saveOrder(OrderVo orderVo) {
         try{
-            System.out.println(getOrderNo());
+            if(orderVo.getOrderEntity().getGetGoodsDate() == null){
+                return ServerResponseVo.createByError("请选择提/送货日期");
+            }
             OrderEntity order = orderVo.getOrderEntity();
             List<OrderDetailEntity> list = orderVo.getGoodsList();
             // 插入订单
             if(order != null){
                 // 写入业务编号
-                order.setOrderNo(getOrderNo());
+                order.setOrderNo(getOrderNo(DateUtil.getDate(orderVo.getOrderEntity().getGetGoodsDate(),"yyyyMMdd")));
                 // 如果没有状态 默认未付款
                 if(order.getPayStatus() == null){
                     order.setPayStatus(ProjectEnum.NOT_PAY);
+                }
+                // 判断未付金额
+                if(order.getPaidAmount() == null){
+                    // 未付款
+                    if(order.getPayStatus().equals(ProjectEnum.NOT_PAY)) {
+                        order.setPaidAmount(BigDecimal.ZERO);
+                        order.setUnpaidAmount(order.getTotalAmount());
+                    }
+                    // 已结清
+                    if(order.getPayStatus().equals(ProjectEnum.PAY_ALL)) {
+                        order.setPaidAmount(order.getTotalAmount());
+                        order.setUnpaidAmount(BigDecimal.ZERO);
+                    }
+                    // 部分支付直接返回需要填写
+                    if(order.getPayStatus().equals(ProjectEnum.PAY_SOME)){
+                        return ServerResponseVo.createByError("请填写已付金额");
+                    }
                 }
                 order.setCreateTime(new Date());
                 order.setRemove(ProjectEnum.NOT_DELETE);
@@ -115,7 +135,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     *@description  根据当前日期和当日订单生成订单编号
+     *@description  根据传入日期和日期内订单生成订单编号
      *@eg           编号例子:20190903001
      *@params  []
      *@return  java.lang.String
@@ -123,8 +143,8 @@ public class OrderServiceImpl implements OrderService {
      *@date    2019/9/3 17:47
      *@other
      */
-    public String getOrderNo(){
-        Integer count = orderEntityRepository.findNoByGetDate(DateUtil.getTodayDate());
+    public String getOrderNo(String date){
+        Integer count = orderEntityRepository.findNoByGetDate(date);
         return DateUtil.getDate(new Date(),"yyyyMMdd")+ NumberUtil.formatNumberWithZero(count+1,3);
     }
 
