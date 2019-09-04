@@ -56,12 +56,15 @@
         form.on('submit(formDemo)', function(data){
             axios.post('/login', Qs.stringify(data.field))
             .then(function (response) {
-                console.log(response);
+                if(response.data.type == 'SUCCESS'){
+                    layer.msg('登陆成功');
+                    return window.location.href="/home";
+                }
+                return layer.msg(response.data.message);
             })
             .catch(function (error) {
                 console.log(error);
             });
-            layer.msg(JSON.stringify(data.field));
             return false;
         });
     });

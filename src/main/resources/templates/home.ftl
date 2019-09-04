@@ -86,6 +86,10 @@
                             <a href="javascript:;" kit-target data-options="{url:'/home/order/list',icon:'&#xe770;',title:'Order 订单',id:'2'}">
                                 <i class="layui-icon">&#xe770;</i><span>Order 订单</span></a>
                         </dd>
+                        <dd>
+                            <a href="javascript:;" kit-target data-options="{url:'/home/user/list',icon:'&#xe770;',title:'User 用户',id:'3'}">
+                                <i class="layui-icon">&#xe770;</i><span>User 用户</span></a>
+                        </dd>
                     </dl>
                 </li>
             </ul>

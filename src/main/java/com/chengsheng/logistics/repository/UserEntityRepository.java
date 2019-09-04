@@ -10,5 +10,4 @@ public interface UserEntityRepository extends JpaRepository<UserEntity,Integer> 
 
     @Query("from UserEntity u where u.userName = ?1 and u.remove = 0")
     UserEntity findByUserName(String userName);
-
 }

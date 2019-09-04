@@ -43,6 +43,15 @@ public class ViewController {
         return "order/tableList";
     }
 
+    /**
+     * 用户列表
+     * @return
+     */
+    @GetMapping("/home/user/list")
+    public String homeTableUserList(){
+        return "user/tableList";
+    }
+
 
     /**
      *@description  编辑页面展示
@@ -55,6 +64,15 @@ public class ViewController {
     @GetMapping("/home/order/edit")
     public String homeEditOrder(){
         return "order/edit";
+    }
+
+    /**
+     * 用户编辑展示页面
+     * @return
+     */
+    @GetMapping("/home/user/edit")
+    public String homeEditUser(){
+        return "user/edit";
     }
 
 }

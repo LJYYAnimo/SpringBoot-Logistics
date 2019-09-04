@@ -15,7 +15,9 @@ public enum ProjectEnum {
     YEW_DELETE(1,"已删除"),
     NOT_PAY(2, "未支付"),
     PAY_SOME(3, "部分支付"),
-    PAY_ALL(4, "已结清");
+    PAY_ALL(4, "已结清"),
+    USER_LEVEL_STAFF(5,"普通员工"),
+    USER_LEVEL_ADMIN(6,"管理员"),;
 
     private int code;
 
