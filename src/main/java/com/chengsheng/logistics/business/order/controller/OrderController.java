@@ -59,7 +59,7 @@ public class OrderController {
      *@other
      */
     @PostMapping("/save")
-    public ServerResponseVo saveOrder(OrderVo orderVo){
+    public ServerResponseVo saveOrder(@RequestBody OrderVo orderVo){
         return orderService.saveOrder(orderVo);
     }
 

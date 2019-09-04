@@ -17,16 +17,22 @@
                     <form class="layui-form">
                         <div class="layui-container">
                             <div class="layui-row">
-                                <div class="layui-col-md6">
+                                <div class="layui-col-md4">
                                     <label class="layui-form-label">购货单位</label>
                                     <div class="layui-input-block">
                                         <input type="text" name="customerName" lay-verify="required" class="layui-input">
                                     </div>
                                 </div>
-                                <div class="layui-col-md6">
+                                <div class="layui-col-md4">
                                     <label class="layui-form-label">联系电话</label>
                                     <div class="layui-input-block">
                                         <input type="text" name="customerTel" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <label class="layui-form-label">提/送货日期</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" autocomplete="off" class="layui-input" id="getGoodsDate" readonly="readonly">
                                     </div>
                                 </div>
                             </div>
@@ -45,9 +51,33 @@
                                     </div>
                                 </div>
                                 <div class="layui-col-md4">
-                                    <label class="layui-form-label">提/送货日期</label>
+                                    <label class="layui-form-label">提货人信息</label>
                                     <div class="layui-input-block">
-                                        <input type="text" class="layui-input" id="getGoodsDate">
+                                        <input type="text" name="getGoodsPerson" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-row" style="margin: 10px 0px">
+                                <div class="layui-col-md4">
+                                    <label class="layui-form-label">是否结算</label>
+                                    <div class="layui-input-block" style="width: 300px;">
+                                        <input type="radio" name="payStatus" lay-filter="payStatus" value="2" title="未付款" checked="">
+                                        <input type="radio" name="payStatus" lay-filter="payStatus" value="3" title="部分支付">
+                                        <input type="radio" name="payStatus" lay-filter="payStatus" value="4" title="已结清">
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <label class="layui-form-label">已付货款</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="paidAmount" class="layui-input paidAmount">
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <label class="layui-form-label">未付货款</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="unpaidAmount" class="layui-input unpaidAmount">
                                     </div>
                                 </div>
 
@@ -158,6 +188,53 @@
             totalWeightCalculate();
             totalAmountCalculate();
         });
+
+        // 监听单选按钮选择框切换事件
+        form.on('radio(payStatus)', function (data) {
+            console.log(data.value);
+            var totalAmount = $("#totalAmount").val();
+            if(totalAmount != null && totalAmount != undefined && totalAmount.trim() != ""){
+                if(data.value == 2){
+                    $(".paidAmount").val("0");
+                    $(".unpaidAmount").val(totalAmount);
+                }else if(data.value == 4){
+                    $(".unpaidAmount").val("0");
+                    $(".paidAmount").val(totalAmount);
+                }
+            }
+        });
+
+        // 监听已付货款输入框失焦
+        $("body").on("blur", ".paidAmount", function () {
+            if($(this).val() != null && $(this).val() != undefined && $(this).val().trim() != ""&&
+                $("#totalAmount").val() != null && $("#totalAmount").val() != undefined && $("#totalAmount").val().trim() != ""){
+                var totalAmount = $("#totalAmount").val()
+                var paidAmount = $(this).val();
+                var unpaidAmount = Number(totalAmount) - Number(paidAmount);
+                $(".unpaidAmount").val(unpaidAmount);
+                var radioValue = 0;
+                if(paidAmount == totalAmount){
+                    radioValue = 4;
+                }else if(paidAmount > 0){
+                    radioValue = 3;
+                }else if(paidAmount == 0){
+                    radioValue = 2;
+                }
+                // 改变单选框值
+                if(radioValue != 0){
+                    var radio = document.getElementsByName("payStatus");
+                    var radioLength = radio.length;
+                    for (var i = 0; i < radioLength; i++) {
+                        if(radioValue == radio[i].value){
+                            $(radio[i]).next().click();
+                        }
+                    }
+                }
+
+            }
+        });
+
+
 
         // 监听重量输入框失焦
         $("#append_table").on("blur", ".weight", function () {
@@ -293,17 +370,32 @@
             delete orderEntity.price;
             delete orderEntity.subtotalAmount;
             delete orderEntity.remark;
-            postData.orderEntity = JSON.stringify(orderEntity);
-            postData.goodsList = JSON.stringify(goodsList);
+            orderEntity.getGoodsDate = $("#getGoodsDate").val();
+            postData.orderEntity = orderEntity;
+            postData.goodsList = goodsList;
             console.log(postData);
 
-            axios.post('/order/save', Qs.stringify(postData))
-            .then(function (response) {
+            axios({
+                url:'/order/save',
+                method: 'post',
+                data:postData,
+                headers:{
+                    'Content-Type':'application/json; charset=UTF-8'
+                }
+            }).then(function (response) {
                 console.log(response);
             })
             .catch(function (error) {
                 console.log(error);
-            });
+            });;
+
+//            axios.post('/order/save', Qs.stringify(postData))
+//            .then(function (response) {
+//                console.log(response);
+//            })
+//            .catch(function (error) {
+//                console.log(error);
+//            });
             return false;
         });
 

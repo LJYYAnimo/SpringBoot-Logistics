@@ -2,240 +2,80 @@ package com.chengsheng.logistics.entity;
 
 import com.chengsheng.logistics.converter.ProjectEnumConverter;
 import com.chengsheng.logistics.enums.ProjectEnum;
+import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Objects;
 
-/**
- * @author 刘金泳
- * @Date 2019/9/2
- */
-@Entity(name = "order")
-@Table(name = "chengsheng_order", schema = "chengsheng", catalog = "")
-public class OrderEntity {
-    private Integer id;
-    private String customerName;
-    private String customerTel;
-    private String orderNo;
-    private String invoiceType;
-    private String invoiceNo;
-    private Date getGoodsDate;
-    private BigDecimal totalAmount;
+@Data
+@Entity
+@Table(name = "chengsheng_order")
+public class OrderEntity implements Serializable {
 
-    @Convert(converter = ProjectEnumConverter.class)
-    private ProjectEnum payStatus;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "ID")
+	private Integer id;
 
-    private BigDecimal paidAmount;
-    private BigDecimal unpiadAmount;
-    private Integer createId;
-    private Timestamp createTime;
-    private Integer updateId;
-    private Timestamp updateTime;
+	@Column(name = "CUSTOMER_NAME")
+	private String customerName;
 
-    @Convert(converter = ProjectEnumConverter.class)
-    private ProjectEnum remove;
+	@Column(name = "CUSTOMER_TEL")
+	private String customerTel;
 
-    private String remark;
+	@Column(name = "ORDER_NO")
+	private String orderNo;
 
-    @Id
-    @Column(name = "ID")
-    public Integer getId() {
-        return id;
-    }
+	@Column(name = "INVOICE_TYPE")
+	private String invoiceType;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	@Column(name = "INVOICE_NO")
+	private String invoiceNo;
 
-    @Basic
-    @Column(name = "CUSTOMER_NAME")
-    public String getCustomerName() {
-        return customerName;
-    }
+	@Column(name = "GET_GOODS_DATE")
+	private Date getGoodsDate;
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
+	@Column(name = "TOTAL_NUMBER")
+	private Integer totalNumber;
 
-    @Basic
-    @Column(name = "CUSTOMER_TEL")
-    public String getCustomerTel() {
-        return customerTel;
-    }
+	@Column(name = "TOTAL_WEIGHT")
+	private BigDecimal totalWeight;
 
-    public void setCustomerTel(String customerTel) {
-        this.customerTel = customerTel;
-    }
+	@Column(name = "TOTAL_AMOUNT")
+	private BigDecimal totalAmount;
 
-    @Basic
-    @Column(name = "ORDER_NO")
-    public String getOrderNo() {
-        return orderNo;
-    }
+	@Column(name = "GET_GOODS_PERSON")
+	private String getGoodsPerson;
 
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
-    }
+	@Column(name = "PAY_STATUS")
+	@Convert(converter = ProjectEnumConverter.class)
+	private ProjectEnum payStatus;
 
-    @Basic
-    @Column(name = "INVOICE_TYPE")
-    public String getInvoiceType() {
-        return invoiceType;
-    }
+	@Column(name = "PAID_AMOUNT")
+	private BigDecimal paidAmount;
 
-    public void setInvoiceType(String invoiceType) {
-        this.invoiceType = invoiceType;
-    }
+	@Column(name = "UNPAID_AMOUNT")
+	private BigDecimal unpaidAmount;
 
-    @Basic
-    @Column(name = "INVOICE_NO")
-    public String getInvoiceNo() {
-        return invoiceNo;
-    }
+	@Column(name = "CREATE_ID")
+	private Integer createId;
 
-    public void setInvoiceNo(String invoiceNo) {
-        this.invoiceNo = invoiceNo;
-    }
+	@Column(name = "CREATE_TIME")
+	private Date createTime;
 
-    @Basic
-    @Column(name = "GET_GOODS_DATE")
-    public Date getGetGoodsDate() {
-        return getGoodsDate;
-    }
+	@Column(name = "UPDATE_ID")
+	private Integer updateId;
 
-    public void setGetGoodsDate(Date getGoodsDate) {
-        this.getGoodsDate = getGoodsDate;
-    }
+	@Column(name = "UPDATE_TIME")
+	private Date updateTime;
 
-    @Basic
-    @Column(name = "TOTAL_AMOUNT")
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
+	@Column(name = "REMOVE")
+	@Convert(converter = ProjectEnumConverter.class)
+	private ProjectEnum remove;
 
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
+	@Column(name = "REMARK")
+	private String remark;
 
-    @Basic
-    @Column(name = "PAY_STATUS")
-    public ProjectEnum getPayStatus() {
-        return payStatus;
-    }
-
-    public void setPayStatus(ProjectEnum payStatus) {
-        this.payStatus = payStatus;
-    }
-
-    @Basic
-    @Column(name = "PAID_AMOUNT")
-    public BigDecimal getPaidAmount() {
-        return paidAmount;
-    }
-
-    public void setPaidAmount(BigDecimal paidAmount) {
-        this.paidAmount = paidAmount;
-    }
-
-    @Basic
-    @Column(name = "UNPIAD_AMOUNT")
-    public BigDecimal getUnpiadAmount() {
-        return unpiadAmount;
-    }
-
-    public void setUnpiadAmount(BigDecimal unpiadAmount) {
-        this.unpiadAmount = unpiadAmount;
-    }
-
-    @Basic
-    @Column(name = "CREATE_ID")
-    public Integer getCreateId() {
-        return createId;
-    }
-
-    public void setCreateId(Integer createId) {
-        this.createId = createId;
-    }
-
-    @Basic
-    @Column(name = "CREATE_TIME")
-    public Timestamp getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-    }
-
-    @Basic
-    @Column(name = "UPDATE_ID")
-    public Integer getUpdateId() {
-        return updateId;
-    }
-
-    public void setUpdateId(Integer updateId) {
-        this.updateId = updateId;
-    }
-
-    @Basic
-    @Column(name = "UPDATE_TIME")
-    public Timestamp getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Timestamp updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    @Basic
-    @Column(name = "REMOVE")
-    public ProjectEnum getRemove() {
-        return remove;
-    }
-
-    public void setRemove(ProjectEnum remove) {
-        this.remove = remove;
-    }
-
-    @Basic
-    @Column(name = "REMARK")
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrderEntity that = (OrderEntity) o;
-        return id == that.id &&
-                remove == that.remove &&
-                Objects.equals(customerName, that.customerName) &&
-                Objects.equals(customerTel, that.customerTel) &&
-                Objects.equals(orderNo, that.orderNo) &&
-                Objects.equals(invoiceType, that.invoiceType) &&
-                Objects.equals(invoiceNo, that.invoiceNo) &&
-                Objects.equals(getGoodsDate, that.getGoodsDate) &&
-                Objects.equals(totalAmount, that.totalAmount) &&
-                Objects.equals(payStatus, that.payStatus) &&
-                Objects.equals(paidAmount, that.paidAmount) &&
-                Objects.equals(unpiadAmount, that.unpiadAmount) &&
-                Objects.equals(createId, that.createId) &&
-                Objects.equals(createTime, that.createTime) &&
-                Objects.equals(updateId, that.updateId) &&
-                Objects.equals(updateTime, that.updateTime) &&
-                Objects.equals(remark, that.remark);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, customerName, customerTel, orderNo, invoiceType, invoiceNo, getGoodsDate, totalAmount, payStatus, paidAmount, unpiadAmount, createId, createTime, updateId, updateTime, remove, remark);
-    }
 }
