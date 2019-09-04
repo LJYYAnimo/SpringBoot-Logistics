@@ -8,6 +8,7 @@ import com.chengsheng.logistics.entity.OrderPayEntity;
 import com.chengsheng.logistics.enums.ProjectEnum;
 import com.chengsheng.logistics.repository.OrderDetailEntityRepository;
 import com.chengsheng.logistics.repository.OrderEntityRepository;
+import com.chengsheng.logistics.repository.OrderPayEntityRepository;
 import com.chengsheng.logistics.util.DateUtil;
 import com.chengsheng.logistics.util.NumberUtil;
 import com.chengsheng.logistics.vo.LayuiVo;
@@ -36,6 +37,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDetailEntityRepository orderDetailEntityRepository;
+
+    @Autowired
+    private OrderPayEntityRepository orderPayEntityRepository;
 
     @Override
     public List<OrderEntity> view() {
@@ -100,6 +104,7 @@ public class OrderServiceImpl implements OrderService {
                 pay.setPayTime(DateUtil.getNowDateTimeStamp());
                 pay.setCreateTime(DateUtil.getNowDateTimeStamp());
                 pay.setRemove(ProjectEnum.NOT_DELETE);
+                orderPayEntityRepository.save(pay);
             }
 
             return ServerResponseVo.createBySuccess();
