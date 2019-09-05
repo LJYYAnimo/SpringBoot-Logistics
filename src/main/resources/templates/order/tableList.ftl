@@ -22,7 +22,8 @@
     </div>
 </body>
 <script type="text/html" id="table-toolbar">
-    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="cat">查看</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="export">导出</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script type="text/javascript" src="/layui/layui.js"></script>
@@ -44,7 +45,7 @@
                 ,{field: 'customerTel', title: '手机号', fixed: 'left',align:'center'}
                 ,{field: 'getGoodsDate', title: '提/送货日期', fixed: 'left',align:'center',
                     templet: function(d){
-                        return layui.util.toDateString(d.getGoodsDate);
+                        return layui.util.toDateString(d.getGoodsDate).substring(0,10);
                     }
                  }
                 ,{field: 'totalNumber', width: 80, title: '总数量', fixed: 'left',align:'center'}
@@ -82,7 +83,6 @@
             var checkStatus = table.checkStatus(obj.config.id);
             switch(obj.event){
                 case 'add':
-                    layer.msg('添加');
                     layer.open({
                         type: 2,
                         title: '新建订单',
@@ -101,6 +101,24 @@
                     break;
             };
         });
+
+
+        table.on('tool(order-table)', function(obj){
+            console.log(obj);
+            var data = obj.data;
+            if(obj.event === 'export'){
+                window.open("/order/export?id="+data.id);
+            } else if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                layer.alert('编辑行：<br>'+ JSON.stringify(data))
+            }
+        });
+
+
     });
 </script>
 </html>

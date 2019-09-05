@@ -383,20 +383,21 @@
                     'Content-Type':'application/json; charset=UTF-8'
                 }
             }).then(function (response) {
-                console.log(response);
+                if(response.data.type == 'SUCCESS'){
+                    console.log("success");
+                    window.parent.location.reload();//刷新父页面
+                    parent.layer.closeAll();
+                    return false;
+                }
+                layer.msg(response.data.message);
+                return false;
             })
             .catch(function (error) {
                 console.log(error);
-            });;
+                layer.msg(error)
+                return false;
+            });
 
-//            axios.post('/order/save', Qs.stringify(postData))
-//            .then(function (response) {
-//                console.log(response);
-//            })
-//            .catch(function (error) {
-//                console.log(error);
-//            });
-            return false;
         });
 
     });

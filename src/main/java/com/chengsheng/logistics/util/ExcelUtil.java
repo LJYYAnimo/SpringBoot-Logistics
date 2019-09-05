@@ -41,15 +41,16 @@ public class ExcelUtil {
             // 读取第一个sheet
             HSSFSheet sheet = workbook.createSheet("sheet1");
             // 设置宽度
-            sheet.setColumnWidth((short) 0, (int)((8.25+0.71)*256));
-            sheet.setColumnWidth((short) 1, (int)((15.63+0.71)*256));
-            sheet.setColumnWidth((short) 2, (int)((7.13+0.71)*256));
-            sheet.setColumnWidth((short) 3, (int)((6.75+0.71)*256));
-            sheet.setColumnWidth((short) 4, (int)((5.38+0.71)*256));
-            sheet.setColumnWidth((short) 5, (int)((7.75+0.71)*256));
-            sheet.setColumnWidth((short) 6, (int)((10.38+0.71)*256));
-            sheet.setColumnWidth((short) 7, (int)((5.25+0.71)*256));
-            sheet.setColumnWidth((short) 8, (int)((9.38+0.71)*256));
+            sheet.setColumnWidth((short) 0, 256*10+184);
+            sheet.setColumnWidth((short) 1, 256*18+184);
+            sheet.setColumnWidth((short) 2, 256*7+184);
+            sheet.setColumnWidth((short) 3, 256*8+184);
+            sheet.setColumnWidth((short) 4, 256*6+184);
+            sheet.setColumnWidth((short) 5, 256*8+184);
+            sheet.setColumnWidth((short) 6, 256*12+184);
+            sheet.setColumnWidth((short) 7, 256*6+184);
+            sheet.setColumnWidth((short) 8, 256*11+184);
+            sheet.setColumnWidth((short) 9, 256*2+184);
 
             // 数据样式
             HSSFCellStyle dataCellStyle = workbook.createCellStyle();
@@ -64,17 +65,18 @@ public class ExcelUtil {
             dataFont.setFontHeightInPoints((short) 9);// 设置字体大小
             dataCellStyle.setFont(dataFont);
             dataCellStyle.setWrapText(true);// 强制换行
-            // 垂直局下 水平居中 无边框 9号微软雅黑
+            // 垂直居下 水平居中 无边框 9号微软雅黑
             HSSFCellStyle cellStyleNoBorder = workbook.createCellStyle();
             cellStyleNoBorder.setVerticalAlignment(HSSFCellStyle.VERTICAL_BOTTOM);
             cellStyleNoBorder.setAlignment(HSSFCellStyle.ALIGN_CENTER);
             cellStyleNoBorder.setFont(dataFont);
-            // 垂直局下 水平居左 无边框 9号微软雅黑
+            // 垂直居下 水平居左 无边框 9号微软雅黑
             HSSFCellStyle cellStyleNoBorderLeft = workbook.createCellStyle();
             cellStyleNoBorderLeft.setVerticalAlignment(HSSFCellStyle.VERTICAL_BOTTOM);
             cellStyleNoBorderLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+            cellStyleNoBorderLeft.setWrapText(true);
             cellStyleNoBorderLeft.setFont(dataFont);
-            // 垂直局下 水平居右 无边框 10号微软雅黑
+            // 垂直居下 水平居右 无边框 10号微软雅黑
             HSSFCellStyle cellStyleNoBorderRight = workbook.createCellStyle();
             cellStyleNoBorderRight.setVerticalAlignment(HSSFCellStyle.VERTICAL_BOTTOM);
             cellStyleNoBorderRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
@@ -82,6 +84,21 @@ public class ExcelUtil {
             titleFont.setFontName("微软雅黑");
             titleFont.setFontHeightInPoints((short) 10);// 设置字体大小
             cellStyleNoBorderRight.setFont(titleFont);
+            // 抬头公司名称样式
+            HSSFCellStyle companyCellStyle = workbook.createCellStyle();
+            companyCellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直居中
+            companyCellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);//水平居中
+            HSSFFont companyFont = workbook.createFont();
+            companyFont.setFontName("微软雅黑");
+            companyFont.setFontHeightInPoints((short) 18);// 设置字体大小
+            companyFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//加粗
+            companyCellStyle.setFont(companyFont);
+            // 垂直居中 水平居中 无边框 9号微软雅黑 自动换行（页码样式）
+            HSSFCellStyle pageCellStyle = workbook.createCellStyle();
+            pageCellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+            pageCellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+            pageCellStyle.setFont(dataFont);
+            pageCellStyle.setWrapText(true);
 
             // 开始写入数据
             int headRowNum = 0;  // 间隔行数
@@ -107,6 +124,7 @@ public class ExcelUtil {
                     CellRangeAddress cra9 = new CellRangeAddress(i + headRowNum + 15, i + headRowNum + 16, 0, 0); // 说明
                     CellRangeAddress cra10 = new CellRangeAddress(i + headRowNum + 15, i + headRowNum + 16, 1, 8); // 说明内容
                     CellRangeAddress cra11 =new CellRangeAddress(i + headRowNum + 17, i + headRowNum + 17, 0, 8); // 联系方式
+                    CellRangeAddress cra12 =new CellRangeAddress(i + headRowNum, i + headRowNum + 17, 9, 9); // 页码
                     for(int index = 0; index < 11; index++){
                         CellRangeAddress cra = new CellRangeAddress(i + headRowNum + 4 + index, i + headRowNum + 4 + index, 7, 8); // 备注
                         sheet.addMergedRegion(cra);
@@ -124,16 +142,23 @@ public class ExcelUtil {
                     sheet.addMergedRegion(cra9);
                     sheet.addMergedRegion(cra10);
                     sheet.addMergedRegion(cra11);
+                    sheet.addMergedRegion(cra12);
 
                     // 创建公司行
                     HSSFRow companyRow = sheet.createRow(i+headRowNum);
-                    HSSFCell companyCell = companyRow.createCell(0);
-                    companyCell.setCellValue("南昌成晟实业有限公司    结算单");
                     companyRow.setHeightInPoints((float)22.5);
+                    HSSFCell companyCell = companyRow.createCell(0);
+                    companyCell.setCellValue("                    南昌成晟实业有限公司    结算单");
+                    companyCell.setCellStyle(companyCellStyle);
                     // 创建订单编号行
                     HSSFCell orderNoCell = companyRow.createCell(7);
                     orderNoCell.setCellValue(data.getOrderEntity().getOrderNo()==null?"":"No:"+data.getOrderEntity().getOrderNo());
                     orderNoCell.setCellStyle(cellStyleNoBorder);
+                    // 创建页码行
+                    HSSFCell pageCell = companyRow.createCell(9);
+                    pageCell.setCellValue("第\n"+page+"\n页\n/\n共\n"+allPage+"\n页");
+                    pageCell.setCellStyle(pageCellStyle);
+
                     // 创建地址行
                     HSSFRow addressRow = sheet.createRow(i+headRowNum+1);
                     addressRow.setHeightInPoints((float)16.5);
@@ -158,7 +183,9 @@ public class ExcelUtil {
                     customerLabelCell.setCellStyle(dataCellStyle);
                     HSSFCell customerCell = customerRow.createCell(1);
                     customerCell.setCellValue(data.getOrderEntity().getCustomerName()==null?"":data.getOrderEntity().getCustomerName());
-                    customerCell.setCellStyle(dataCellStyle);
+                    customerCell.setCellStyle(cellStyleNoBorderLeft);
+                    // 设置合并单元格边框样式
+                    setCraBorder(i+headRowNum+3,i+headRowNum+3,1,4,sheet,workbook);
                     // 创建发票类型行
                     HSSFCell invoiceTypeLabelCell = customerRow.createCell(5);
                     invoiceTypeLabelCell.setCellValue("发票类型");
@@ -194,16 +221,31 @@ public class ExcelUtil {
                     for (int h = 0; h < titleArr.length; h++) {
                         cell = row.createCell(h);
                         cell.setCellValue(titleArr[h]);
-                        cell.setCellStyle(headStyle);
+                        if(h == titleArr.length -1){
+                            // 备注行使用无边框样式，由其他地方添加合并单元格边框
+                            cell.setCellStyle(cellStyleNoBorder);
+                            // 设置合并单元格边框样式
+                            setCraBorder(i+headRowNum+4,i+headRowNum+4,7,8,sheet,workbook);
+                        }else {
+                            cell.setCellStyle(headStyle);
+                        }
                     }
                     headRowNum += 5;
                 }
+
                 HSSFRow nRow = sheet.createRow(i+headRowNum);
                 nRow.setHeightInPoints(lineHeight);
                 for (int j = 0; j < keys.length; j++) {
                     HSSFCell nCell = nRow.createCell(j);
                     nCell.setCellValue(data.getDataList().get(i).get(keys[j])==null?"":data.getDataList().get(i).get(keys[j]).toString());
-                    nCell.setCellStyle(dataCellStyle);
+                    if(j == keys.length -1){
+                        // 备注行使用无边框样式，由其他地方添加合并单元格边框
+                        nCell.setCellStyle(cellStyleNoBorder);
+                        // 设置合并单元格边框样式
+                        setCraBorder(i+headRowNum,i+headRowNum,7,8,sheet,workbook);
+                    }else {
+                        nCell.setCellStyle(dataCellStyle);
+                    }
                 }
                 // 如果数据行数不满足8行，则进行补充空白单元格。
                 if(i == data.getDataList().size()-1 && yuShu != 0){
@@ -213,7 +255,14 @@ public class ExcelUtil {
                         blankRow.setHeightInPoints((float)18);
                         for (int k = 0; k < keys.length; k++) {
                             HSSFCell blankCell = blankRow.createCell(k);
-                            blankCell.setCellStyle(dataCellStyle);
+                            if(k == keys.length -1){
+                                // 备注行使用无边框样式，由其他地方添加合并单元格边框
+                                blankCell.setCellStyle(cellStyleNoBorder);
+                                // 设置合并单元格边框样式
+                                setCraBorder(i+headRowNum,i+headRowNum,7,8,sheet,workbook);
+                            }else {
+                                blankCell.setCellStyle(dataCellStyle);
+                            }
                         }
                     }
                 }
@@ -245,6 +294,8 @@ public class ExcelUtil {
                     blankTotalCell2.setCellStyle(dataCellStyle);
                     HSSFCell blankTotalCell3 = totalRow.createCell(7);
                     blankTotalCell3.setCellStyle(dataCellStyle);
+                    // 设置合并单元格边框样式
+                    setCraBorder(i+headRowNum+1,i+headRowNum+1,7,8,sheet,workbook);
 
                     // 创建总计大写行
                     HSSFRow totalChineseLabelRow = sheet.createRow(i + headRowNum + 2);
@@ -254,7 +305,7 @@ public class ExcelUtil {
                     totalChineseLabelCell.setCellStyle(dataCellStyle);
                     // 创建总计大写数据行
                     HSSFCell totalChineseCell = totalChineseLabelRow.createCell(1);
-                    totalChineseCell.setCellValue("大写数字");
+                    totalChineseCell.setCellValue(NumberUtil.getChineseNumber(data.getOrderEntity().getTotalAmount().toString()));
                     totalChineseCell.setCellStyle(dataCellStyle);
                     // 创建提货人签字行
                     HSSFCell getGoodsPersonLabelCell = totalChineseLabelRow.createCell(5);
@@ -264,11 +315,8 @@ public class ExcelUtil {
                     HSSFCell getGoodsPersonCell = totalChineseLabelRow.createCell(7);
                     getGoodsPersonCell.setCellValue(data.getOrderEntity().getGetGoodsPerson() == null ? "" : data.getOrderEntity().getGetGoodsPerson());
                     getGoodsPersonCell.setCellStyle(dataCellStyle);
-
-
-
-
-
+                    // 设置合并单元格边框样式
+                    setCraBorder(i+headRowNum+2,i+headRowNum+2,7,8,sheet,workbook);
 
                     // 创建说明行
                     HSSFRow explainRow = sheet.createRow(i + headRowNum + 3);
@@ -279,12 +327,15 @@ public class ExcelUtil {
                     HSSFCell explainLabelCell = explainRow.createCell(0);
                     explainLabelCell.setCellValue("说明");
                     explainLabelCell.setCellStyle(dataCellStyle);
+                    // 设置合并单元格边框样式
+                    setCraBorder(i+headRowNum+3,i+headRowNum+4,0,0,sheet,workbook);
                     // 创建总计大写数据行
                     HSSFCell explainDataCell = explainRow.createCell(1);
                     explainDataCell.setCellValue("1.本结算单等同于购销合同，提货人签字后生效，购方在仓库当场清点出货数量规格，出货后销方概不负责；购方如有质量异议，请于三天内向销方说明，逾期视为货品合格。\n" +
                             "2.若不是购货单位负责人签收，将由提货人个人承担此购销合同货款。");
                     explainDataCell.setCellStyle(cellStyleNoBorderLeft);
-
+                    // 设置合并单元格边框样式
+                    setCraBorder(i+headRowNum+3,i+headRowNum+4,1,8,sheet,workbook);
 
                     // 创建联系电话行
                     HSSFRow contactRow = sheet.createRow(i + headRowNum + 5);
@@ -292,19 +343,14 @@ public class ExcelUtil {
                     HSSFCell contactCell = contactRow.createCell(0);
                     contactCell.setCellValue("          电话/传真：0791-88200107                                       联系人：18779898447（曾）  13767091020（邹）");
                     contactCell.setCellStyle(cellStyleNoBorderLeft);
-                    // 使用RegionUtil类为合并后的单元格添加边框
-//                    for(int index = 0; index < 11; index++){
-//                        CellRangeAddress cra = new CellRangeAddress(i + headRowNum - 5 + 4 + index, i + headRowNum - 5 + 4 + index, 7, 8); // 备注
-//                        sheet.addMergedRegion(cra);
-//                    }
-//                    RegionUtil.setBorderBottom(1, cra, sheet, workbook); // 下边框
-//                    RegionUtil.setBorderLeft(1, cra, sheet, workbook); // 左边框
-//                    RegionUtil.setBorderRight(1, cra, sheet, workbook); // 右边框
-//                    RegionUtil.setBorderTop(1, cra, sheet, workbook); // 上边框
+
+                    headRowNum+=5;
+                    page++;// 页码增加
                 }
 
 
                 // 页码行
+
 //                if((i+1) % pageSize == 0 && i != data.getDataList().size() -1){
 //                    headRowNum += 1;
 //                    CellRangeAddress regionPage = new CellRangeAddress(i+headRowNum,i+headRowNum,(short)0,(short)4);
@@ -434,5 +480,26 @@ public class ExcelUtil {
                 }
             }
         }
+    }
+
+    /***
+     * @description  设置合并单元格的边框样式
+     * @param firstRow 起始行
+     * @param lastRow  结束行
+     * @param firstCol 起始列
+     * @param lastCol  结束列
+     * @param sheet    sheet表
+     * @param workbook workbook工作簿
+     * @return  void
+     * @author  Gu Yu Long
+     * @date    2019/9/5 15:53
+     * @other
+     */
+    public static void setCraBorder(int firstRow, int lastRow, int firstCol, int lastCol, HSSFSheet sheet, HSSFWorkbook workbook) {
+        CellRangeAddress cra = new CellRangeAddress(firstRow, lastRow, firstCol, lastCol);
+        RegionUtil.setBorderBottom(1, cra, sheet, workbook); // 下边框
+        RegionUtil.setBorderLeft(1, cra, sheet, workbook); // 左边框
+        RegionUtil.setBorderRight(1, cra, sheet, workbook); // 右边框
+        RegionUtil.setBorderTop(1, cra, sheet, workbook); // 上边框
     }
 }
