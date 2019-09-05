@@ -5,19 +5,16 @@ import com.chengsheng.logistics.enums.ProjectEnum;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 
-/**
- * @author 刘金泳
- * @Date 2019/9/2
- */
+@Data
 @Entity
 @Table(name = "chengsheng_user")
-@Data
-public class UserEntity {
+public class UserEntity implements Serializable {
+
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "ID")
     private Integer id;
 
@@ -67,4 +64,5 @@ public class UserEntity {
 
     @Column(name = "REMARK")
     private String remark;
+
 }

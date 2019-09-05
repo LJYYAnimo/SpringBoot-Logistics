@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -61,6 +63,19 @@ public class OrderController {
     @PostMapping("/save")
     public ServerResponseVo saveOrder(@RequestBody OrderVo orderVo){
         return orderService.saveOrder(orderVo);
+    }
+
+    /***
+     *@description  导出客户excel结算单
+     *@params  [order, response]
+     *@return  void
+     *@author  Gu Yu Long
+     *@date    2019/9/4 15:39
+     *@other
+     */
+    @GetMapping("/export")
+    public void exportForExcel(@ModelAttribute OrderEntity order, HttpServletResponse response){
+        orderService.exportForExcel(order, response);
     }
 
 }

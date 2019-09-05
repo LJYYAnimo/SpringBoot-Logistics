@@ -6,6 +6,7 @@ import com.chengsheng.logistics.vo.LayuiVo;
 import com.chengsheng.logistics.vo.ServerResponseVo;
 import org.springframework.data.domain.Pageable;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -37,4 +38,14 @@ public interface OrderService {
      *@other
      */
     ServerResponseVo saveOrder(OrderVo orderVo);
+
+    /**
+     *@description  导出客户excel结算单
+     *@params  [order, response]
+     *@return  void
+     *@author  Gu Yu Long
+     *@date    2019/9/4 15:39
+     *@other
+     */
+    void exportForExcel(OrderEntity order, HttpServletResponse response);
 }

@@ -1,6 +1,7 @@
 package com.chengsheng.logistics.business.order.service.impl;
 
 import com.chengsheng.logistics.business.order.service.OrderService;
+import com.chengsheng.logistics.business.order.vo.OrderExcelVo;
 import com.chengsheng.logistics.business.order.vo.OrderVo;
 import com.chengsheng.logistics.entity.OrderDetailEntity;
 import com.chengsheng.logistics.entity.OrderEntity;
@@ -10,6 +11,7 @@ import com.chengsheng.logistics.repository.OrderDetailEntityRepository;
 import com.chengsheng.logistics.repository.OrderEntityRepository;
 import com.chengsheng.logistics.repository.OrderPayEntityRepository;
 import com.chengsheng.logistics.util.DateUtil;
+import com.chengsheng.logistics.util.ExcelUtil;
 import com.chengsheng.logistics.util.NumberUtil;
 import com.chengsheng.logistics.vo.LayuiVo;
 import com.chengsheng.logistics.vo.ServerResponseVo;
@@ -19,10 +21,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @program: logistics->OrderServiceImpl
@@ -145,8 +146,47 @@ public class OrderServiceImpl implements OrderService {
      */
     public String getOrderNo(String date){
         Integer count = orderEntityRepository.findNoByGetDate(date);
-        return DateUtil.getDate(new Date(),"yyyyMMdd")+ NumberUtil.formatNumberWithZero(count+1,3);
+        return date + NumberUtil.formatNumberWithZero(count+1,3);
     }
+
+
+    /***
+     *@description  导出客户Excel结算单
+     *@params  [order, response]
+     *@return  void
+     *@author  Gu Yu Long
+     *@date    2019/9/4 15:40
+     *@other
+     */
+    @Override
+    public void exportForExcel(OrderEntity order, HttpServletResponse response) {
+        // 订单信息
+        OrderEntity o = orderEntityRepository.findById(order.getId()).get();
+        // 明细货物内容
+        List<OrderDetailEntity> list = orderDetailEntityRepository.findByOrderId(order.getId());
+
+        List<Map<String, Object>> listmap = new ArrayList<>();
+        for(OrderDetailEntity d : list){
+            Map<String, Object> mapValue = new HashMap<>();
+            mapValue.put("goodsName", d.getGoodsName());
+            mapValue.put("goodsDetailInfo", d.getGoodsDetailInfo());
+            mapValue.put("number", d.getNumber());
+            mapValue.put("weight", d.getWeight());
+            mapValue.put("pricingMethod", d.getPricingMethod());
+            mapValue.put("price", d.getPrice());
+            mapValue.put("subtotalAmount", d.getSubtotalAmount());
+            mapValue.put("remark", d.getRemark());
+            listmap.add(mapValue);
+        }
+        OrderExcelVo orderExcelVo = OrderExcelVo.builder().orderEntity(o).dataList(listmap).build();
+
+
+        String[] keys = new String[] {"goodsName","goodsDetailInfo","number","weight","pricingMethod","price","subtotalAmount","remark"};
+        String[] titleArr = new String[] {"货品名称","规格型号","数量","重量-吨","计价","单价","金额","备注"};
+        String fileName = o.getCustomerName()+" "+ o.getOrderNo();//生产的xls文件名称
+        ExcelUtil.createCustomerWorkBook(orderExcelVo, keys, titleArr, fileName, response);
+    }
+
 
 
 }
