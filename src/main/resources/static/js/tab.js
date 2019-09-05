@@ -1,7 +1,7 @@
 /** kit_admin-v1.0.4 MIT License By http://kit/zhengjinfan.cn */
 ;layui.define(["jquery", "element", "nprogress"], function (i) {
     var t = layui.jquery, e = layui.element, a = t(document), l = t(window), n = function () {
-        this.config = {elem: void 0, mainUrl: "/index"}, this.v = "1.0.2"
+        this.config = {elem: void 0, mainUrl: "/home/order/list"}, this.v = "1.0.2"
     };
     (n.fn = n.prototype).set = function (i) {
         var e = this;
