@@ -6,11 +6,17 @@ import com.chengsheng.logistics.entity.OrderEntity;
 import com.chengsheng.logistics.vo.LayuiVo;
 import com.chengsheng.logistics.vo.ServerResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,7 +51,7 @@ public class OrderController {
      *@date    2019/9/3 17:01
      *@other
      */
-    @GetMapping("/tableList")
+    @PostMapping("/tableList")
     public LayuiVo<OrderEntity> tableList(OrderEntity orderEntity,
                                           @RequestParam(value = "page" ,defaultValue = "0") Integer page,
                                           @RequestParam(value = "limit" ,defaultValue = "10") Integer limit){
@@ -90,6 +96,13 @@ public class OrderController {
     @GetMapping("/export")
     public void exportForExcel(@ModelAttribute OrderEntity order, HttpServletResponse response){
         orderService.exportForExcel(order, response);
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        //转换日期 注意这里的转化要和传进来的字符串的格式一直 如2015-9-9 就应该为yyyy-MM-dd
+        DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
 }
