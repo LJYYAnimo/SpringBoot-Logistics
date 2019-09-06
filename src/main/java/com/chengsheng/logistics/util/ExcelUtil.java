@@ -305,7 +305,9 @@ public class ExcelUtil {
                     totalChineseLabelCell.setCellStyle(dataCellStyle);
                     // 创建总计大写数据行
                     HSSFCell totalChineseCell = totalChineseLabelRow.createCell(1);
-                    totalChineseCell.setCellValue(NumberUtil.getChineseNumber(data.getOrderEntity().getTotalAmount().toString()));
+                    if(data.getOrderEntity().getTotalAmount()!=null) {
+                        totalChineseCell.setCellValue(NumberUtil.getChineseNumber(data.getOrderEntity().getTotalAmount().toString()));
+                    }
                     totalChineseCell.setCellStyle(dataCellStyle);
                     // 创建提货人签字行
                     HSSFCell getGoodsPersonLabelCell = totalChineseLabelRow.createCell(5);

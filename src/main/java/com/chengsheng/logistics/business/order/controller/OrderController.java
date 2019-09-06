@@ -65,6 +65,20 @@ public class OrderController {
         return orderService.saveOrder(orderVo);
     }
 
+
+    /***
+     *@description  删除订单
+     *@params  [orderVo]
+     *@return  com.chengsheng.logistics.vo.ServerResponseVo
+     *@author  Gu Yu Long
+     *@date    2019/9/6 8:56
+     *@other
+     */
+    @PostMapping("/delete")
+    public ServerResponseVo delete(@RequestBody OrderEntity order){
+        return orderService.delete(order);
+    }
+
     /***
      *@description  导出客户excel结算单
      *@params  [order, response]

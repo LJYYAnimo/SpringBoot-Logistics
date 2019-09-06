@@ -187,6 +187,21 @@ public class OrderServiceImpl implements OrderService {
         ExcelUtil.createCustomerWorkBook(orderExcelVo, keys, titleArr, fileName, response);
     }
 
+    @Override
+    public ServerResponseVo delete(OrderEntity order) {
+        // 删除订单
+        order.setRemove(ProjectEnum.YEW_DELETE);
+        order.setUpdateTime(new Date());
+        orderEntityRepository.deleteById(order.getId(), order.getUpdateId(), new Date());
+
+        // 删除明细
+        orderDetailEntityRepository.deleteByOrderId(order.getId(), order.getUpdateId(), new Date());
+
+        // 删除支付记录
+        orderPayEntityRepository.deleteByOrderId(order.getId(), order.getUpdateId(), new Date());
+
+        return ServerResponseVo.createBySuccess();
+    }
 
 
 }

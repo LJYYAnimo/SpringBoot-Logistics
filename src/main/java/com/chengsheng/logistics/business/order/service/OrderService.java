@@ -48,4 +48,14 @@ public interface OrderService {
      *@other
      */
     void exportForExcel(OrderEntity order, HttpServletResponse response);
+
+    /***
+     *@description  删除订单
+     *@params  [orderVo]
+     *@return  com.chengsheng.logistics.vo.ServerResponseVo
+     *@author  Gu Yu Long
+     *@date    2019/9/6 8:56
+     *@other
+     */
+    ServerResponseVo delete(OrderEntity orderVo);
 }

@@ -103,7 +103,7 @@
     <div class="layui-footer">
         <!-- 底部固定区域 -->
         2019 &copy;
-        <a href="">技术支持单位：XXXXXXXX有限公司</a>
+        <a href="">技术支持单位：顾宇龙、刘金泳</a>
 
     </div>
 </div>

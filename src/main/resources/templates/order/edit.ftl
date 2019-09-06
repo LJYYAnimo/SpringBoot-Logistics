@@ -384,7 +384,7 @@
                 }
             }).then(function (response) {
                 if(response.data.type == 'SUCCESS'){
-                    console.log("success");
+                    layer.msg("新增成功");
                     window.parent.location.reload();//刷新父页面
                     parent.layer.closeAll();
                     return false;

@@ -27,6 +27,7 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script type="text/javascript" src="/layui/layui.js"></script>
+<script type="text/javascript" src="/js/axios.min.js"></script>
 <script>
     layui.use(['table','form'], function(){
 
@@ -40,10 +41,10 @@
             , title: '订单系统'
             , cols:[[
                 {type: 'checkbox', fixed: 'left'}
-                ,{field: 'orderNo', title: '订单编号', fixed: 'left',align:'center'}
-                ,{field: 'customerName', title: '客户', fixed: 'left',align:'center'}
+                ,{field: 'orderNo', sort: true, title: '订单编号', fixed: 'left',align:'center'}
+                ,{field: 'customerName', sort: true, title: '客户', fixed: 'left',align:'center'}
                 ,{field: 'customerTel', title: '手机号', fixed: 'left',align:'center'}
-                ,{field: 'getGoodsDate', title: '提/送货日期', fixed: 'left',align:'center',
+                ,{field: 'getGoodsDate', sort: true,  title: '提/送货日期', fixed: 'left',align:'center',
                     templet: function(d){
                         return layui.util.toDateString(d.getGoodsDate).substring(0,10);
                     }
@@ -80,7 +81,8 @@
 
         //监听事件
         table.on('toolbar(order-table)', function(obj){
-            var checkStatus = table.checkStatus(obj.config.id);
+            var checkStatus = table.checkStatus(obj.config.id); // 获取选中的行 在checkStatus.data里
+            console.log(checkStatus.data);
             switch(obj.event){
                 case 'add':
                     layer.open({
@@ -94,7 +96,33 @@
                     });
                     break;
                 case 'delete':
-                    layer.msg('删除');
+                    console.log(checkStatus.data.length);
+                    if(checkStatus.data.length != 1){
+                        layer.alert('只能选择一条数据');
+                    }else{
+                        layer.confirm('真的删除该订单么', function(index) {
+                            var postData = {"id": checkStatus.data[0].id};
+                            console.log(postData);
+                            axios({
+                                url: '/order/delete',
+                                method: 'post',
+                                data: postData,
+                                headers: {
+                                    'Content-Type': 'application/json; charset=UTF-8'
+                                }
+                            }).then(function (response) {
+                                if (response.data.type == 'SUCCESS') {
+                                    layer.msg("删除成功");
+                                    window.location.reload();
+                                    layer.close(index);
+                                    return;
+                                }
+                                layer.msg(response.data.message);
+                            }).catch(function (error) {
+                                        layer.msg(error);
+                            });
+                        });
+                    }
                     break;
                 case 'update':
                     layer.msg('编辑');
@@ -109,9 +137,28 @@
             if(obj.event === 'export'){
                 window.open("/order/export?id="+data.id);
             } else if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
-                    obj.del();
-                    layer.close(index);
+                layer.confirm('真的删除该订单么', function(index){
+                    var postData = {"id":data.id}
+                    axios({
+                        url:'/order/delete',
+                        method: 'post',
+                        data:postData,
+                        headers:{
+                            'Content-Type':'application/json; charset=UTF-8'
+                        }
+                    }).then(function (response) {
+                        if(response.data.type == 'SUCCESS'){
+                            layer.msg("删除成功");
+                            window.location.reload();
+                            layer.close(index);
+                            return;
+                        }
+                        layer.msg(response.data.message);
+                    })
+                    .catch(function (error) {
+                        layer.msg(error);
+                    });
+
                 });
             } else if(obj.event === 'edit'){
                 layer.alert('编辑行：<br>'+ JSON.stringify(data))
