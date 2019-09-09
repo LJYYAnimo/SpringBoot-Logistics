@@ -17,6 +17,7 @@ import com.chengsheng.logistics.vo.LayuiVo;
 import com.chengsheng.logistics.vo.ServerResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public LayuiVo findList(OrderEntity orderEntity, Pageable pageable) {
         orderEntity.setRemove(ProjectEnum.NOT_DELETE);
-        Example<OrderEntity> entityExample = Example.of(orderEntity);
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching();
+        //客户名称
+        if(orderEntity.getCustomerName()!=null && !("").equals(orderEntity.getCustomerName())){
+            exampleMatcher = exampleMatcher.withMatcher("customerName", ExampleMatcher.GenericPropertyMatchers.contains());
+        }else{
+            orderEntity.setCustomerName(null);
+        }
+        //订单编号
+        if(orderEntity.getOrderNo()!=null && !("").equals(orderEntity.getOrderNo())){
+            exampleMatcher = exampleMatcher.withMatcher("orderNo",ExampleMatcher.GenericPropertyMatchers.contains());
+        }else{
+            orderEntity.setOrderNo(null);
+        }
+        Example<OrderEntity> entityExample = Example.of(orderEntity,exampleMatcher);
         Page<OrderEntity> page = orderEntityRepository.findAll(entityExample,pageable);
         return new LayuiVo<>(page.getContent(),page.getTotalElements());
     }

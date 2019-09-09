@@ -28,25 +28,25 @@
             <div class="layui-col-md6">
                 <label class="layui-form-label">客户名称</label>
                 <div class="layui-input-block">
-                    <input type="text" name="customerName" placeholder="请输入客户名称" class="layui-input">
+                    <input type="text" id="customerName" name="customerName" placeholder="请输入客户名称" class="layui-input">
                 </div>
             </div>
             <div class="layui-col-md6">
                 <label class="layui-form-label">订单编号</label>
                 <div class="layui-input-block">
-                    <input type="text" name="orderNo" placeholder="请输入订单编号"  class="layui-input">
+                    <input type="text" id="orderNo" name="orderNo" placeholder="请输入订单编号"  class="layui-input">
                 </div>
             </div>
             <div class="layui-col-md6">
                 <label class="layui-form-label">提送货日期</label>
                 <div class="layui-input-block">
-                    <input id="getGoodsDate" type="text" name="getGoodsDate" class="layui-input">
+                    <input id="getGoodsDate" type="text" placeholder="请选择提送货日期" name="getGoodsDate" class="layui-input">
                 </div>
             </div>
             <div class="layui-col-md6">
                 <label class="layui-form-label">支付状态</label>
                 <div class="layui-input-block">
-                    <select name="payStatus">
+                    <select name="payStatus" id="payStatus">
                         <option value=""></option>
                         <option value="NOT_PAY">未支付</option>
                         <option value="PAY_SOME">部分支付</option>
@@ -80,20 +80,30 @@
 <script type="text/javascript" src="/js/axios.min.js"></script>
 <script type="text/javascript" src="/js/qs.js"></script>
 <script>
-    layui.use(['table', 'form', 'laydate'], function () {
+    layui.use(['table', 'form', 'laydate','jquery'], function () {
 
         var table = layui.table,
                 form = layui.form,
-                laydate = layui.laydate;
+                laydate = layui.laydate,
+                $ = layui.$;
 
         laydate.render({
-            elem: '#getGoodsDate', //指定元素
-            value: new Date()   // 默认当天
+            elem: '#getGoodsDate' //指定元素
+            // value: new Date()   // 默认当天
         });
 
         form.on('submit(formSearch)', function(data){
+            var customerName = $('#customerName');
+            var orderNo = $('#orderNo');
+            var getGoodsDate = $('#getGoodsDate');
+            var payStatus = $('#payStatus');
             table.reload('order-table', {
-                where:{orderEntity:JSON.stringify(data.field)}
+                where:{
+                    customerName:customerName.val(),
+                    orderNo:orderNo.val(),
+                    getGoodsDate:getGoodsDate.val(),
+                    payStatus:payStatus.val()
+                }
                 ,page: {
                     curr: 1 //重新从第 1 页开始
                 }
@@ -106,7 +116,8 @@
             , url: '/order/tableList'
             , toolbar: 'default'
             , title: '订单系统'
-            , method: 'post'
+             // ,headers: {'content-type': 'application/json'}
+            , method: 'get'
             , cols: [[
                 {type: 'checkbox', fixed: 'left'}
                 , {field: 'orderNo', sort: true, title: '订单编号', fixed: 'left', align: 'center'}

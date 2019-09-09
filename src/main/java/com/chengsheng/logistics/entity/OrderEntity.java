@@ -3,6 +3,7 @@ package com.chengsheng.logistics.entity;
 import com.chengsheng.logistics.converter.ProjectEnumConverter;
 import com.chengsheng.logistics.enums.ProjectEnum;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -35,7 +36,8 @@ public class OrderEntity implements Serializable {
 	private String invoiceNo;
 
 	@Column(name = "GET_GOODS_DATE")
-	private Date getGoodsDate;
+//	@DateTimeFormat(pattern = "yyyy-MM-dd",iso = DateTimeFormat.ISO.DATE)
+	private java.sql.Date getGoodsDate;
 
 	@Column(name = "TOTAL_NUMBER")
 	private Integer totalNumber;

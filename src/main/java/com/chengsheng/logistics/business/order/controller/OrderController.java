@@ -10,13 +10,11 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,10 +49,8 @@ public class OrderController {
      *@date    2019/9/3 17:01
      *@other
      */
-    @PostMapping("/tableList")
-    public LayuiVo<OrderEntity> tableList(OrderEntity orderEntity,
-                                          @RequestParam(value = "page" ,defaultValue = "0") Integer page,
-                                          @RequestParam(value = "limit" ,defaultValue = "10") Integer limit){
+    @GetMapping("/tableList")
+    public LayuiVo<OrderEntity> tableList(OrderEntity orderEntity, Integer page, Integer limit){
         return orderService.findList(orderEntity, PageRequest.of(page - 1,limit));
     }
 
@@ -100,7 +96,6 @@ public class OrderController {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        //转换日期 注意这里的转化要和传进来的字符串的格式一直 如2015-9-9 就应该为yyyy-MM-dd
         DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
