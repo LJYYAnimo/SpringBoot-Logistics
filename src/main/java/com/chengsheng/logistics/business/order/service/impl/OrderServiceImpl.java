@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -217,5 +218,143 @@ public class OrderServiceImpl implements OrderService {
         return ServerResponseVo.createBySuccess();
     }
 
+
+    /**
+     *
+     * 根据id查询订单的信息和编辑信息
+     * @param id
+     * @return
+     */
+    @Override
+    public OrderVo getOrderInfoById(int id) {
+        OrderEntity order = orderEntityRepository.findById(id).get();
+        List<OrderDetailEntity> list = orderDetailEntityRepository.findByOrderId(id);
+        OrderVo orderVo = new OrderVo();
+        orderVo.setOrderEntity(order);
+        orderVo.setGoodsList(list);
+        return orderVo;
+    }
+
+    @Override
+    @Transactional
+    public ServerResponseVo editOrder(OrderVo orderVo) {
+        try{
+            if(orderVo.getOrderEntity().getGetGoodsDate() == null){
+                return ServerResponseVo.createByError("请选择提/送货日期");
+            }
+            OrderEntity order = orderVo.getOrderEntity();
+            List<OrderDetailEntity> list = orderVo.getGoodsList();
+            List<Integer> delIdList = orderVo.getDelGoodsList();
+            // 插入订单
+            if(order != null){
+                // 如果没有状态 默认未付款
+                if(order.getPayStatus() == null){
+                    order.setPayStatus(ProjectEnum.NOT_PAY);
+                }
+                // 判断未付金额
+                if(order.getPaidAmount() == null){
+                    // 未付款
+                    if(order.getPayStatus().equals(ProjectEnum.NOT_PAY)) {
+                        order.setPaidAmount(BigDecimal.ZERO);
+                        order.setUnpaidAmount(order.getTotalAmount());
+                    }
+                    // 已结清
+                    if(order.getPayStatus().equals(ProjectEnum.PAY_ALL)) {
+                        order.setPaidAmount(order.getTotalAmount());
+                        order.setUnpaidAmount(BigDecimal.ZERO);
+                    }
+                    // 部分支付直接返回需要填写
+                    if(order.getPayStatus().equals(ProjectEnum.PAY_SOME)){
+                        return ServerResponseVo.createByError("请填写已付金额");
+                    }
+                }
+                order.setUpdateTime(new Date());
+                order.setRemove(ProjectEnum.NOT_DELETE);
+                orderEntityRepository.save(order);
+            }
+            // 插入订单明细
+            if(list != null && list.size() > 0){
+                for(int i = 0; i < list.size(); i++){
+                    // 写入订单id
+                    list.get(i).setOrderId(order.getId());
+                    if(list.get(i).getId() != null) {
+                        list.get(i).setUpdateTime(DateUtil.getNowDateTimeStamp());
+                    }else{
+                        list.get(i).setCreateTime(DateUtil.getNowDateTimeStamp());
+                    }
+                    list.get(i).setRemove(ProjectEnum.NOT_DELETE);
+                    orderDetailEntityRepository.save(list.get(i));
+                }
+            }
+            if(delIdList != null && delIdList.size() > 0){
+                for(int i = 0; i < delIdList.size(); i++){
+                    // 写入订单id
+                    orderDetailEntityRepository.deleteById(delIdList.get(i), order.getUpdateId(), new Date());
+                }
+            }
+            /**
+             * TODO 后续考虑双击打开修改金额的问题是否记录
+             */
+            // 如果已付货款大于0 插入支付记录
+//            if(order.getPaidAmount().compareTo(BigDecimal.ZERO) > 0){
+//                OrderPayEntity pay = new OrderPayEntity();
+//                pay.setOrderId(order.getId());
+//                pay.setPayAmount(order.getPaidAmount());
+//                pay.setPayTime(DateUtil.getNowDateTimeStamp());
+//                pay.setCreateTime(DateUtil.getNowDateTimeStamp());
+//                pay.setRemove(ProjectEnum.NOT_DELETE);
+//                orderPayEntityRepository.save(pay);
+//            }
+
+            return ServerResponseVo.createBySuccess();
+        }catch (Exception e){
+            e.printStackTrace();
+            return ServerResponseVo.createByError(e.getMessage());
+        }
+    }
+
+    /**
+     * 获得支付信息和订单信息
+     * @param id
+     * @return
+     */
+    @Override
+    public OrderVo getOrderPayInfoById(int id) {
+        OrderEntity order = orderEntityRepository.findById(id).get();
+        List<OrderPayEntity> payList = orderPayEntityRepository.findByOrderId(id);
+        OrderVo orderVo = OrderVo.builder().orderEntity(order).payList(payList).build();
+        return orderVo;
+    }
+
+    /**
+     * 保存支付记录
+     * @param orderPayEntity
+     * @return
+     */
+    @Override
+    public ServerResponseVo savePay(OrderPayEntity orderPayEntity) {
+        try{
+            orderPayEntity.setPayTime(new Date());
+            orderPayEntity.setCreateTime(new Date());
+            orderPayEntity.setRemove(ProjectEnum.NOT_DELETE);
+            orderPayEntityRepository.save(orderPayEntity);
+            OrderEntity orderEntity = orderEntityRepository.findById(orderPayEntity.getOrderId()).get();
+            // 判断订单状态和修改支付金额
+            orderEntity.setPaidAmount(orderEntity.getPaidAmount().add(orderPayEntity.getPayAmount()));
+            orderEntity.setUnpaidAmount(orderEntity.getUnpaidAmount().subtract(orderPayEntity.getPayAmount()));
+            if(orderEntity.getUnpaidAmount().compareTo(BigDecimal.ZERO) == 0){
+                orderEntity.setPayStatus(ProjectEnum.PAY_ALL);
+            }
+            // 未付款的话就要改成部分付款或已付清
+            if(orderEntity.getPayStatus().getCode() == 2){
+                orderEntity.setPayStatus(ProjectEnum.PAY_SOME);
+            }
+            orderEntityRepository.save(orderEntity);
+            return ServerResponseVo.createBySuccess();
+        }catch (Exception e){
+            e.printStackTrace();
+            return ServerResponseVo.createByError(e.getMessage());
+        }
+    }
 
 }

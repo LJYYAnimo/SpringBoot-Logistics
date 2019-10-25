@@ -1,7 +1,16 @@
 package com.chengsheng.logistics.business.view.controller;
 
+import com.chengsheng.logistics.business.order.service.OrderService;
+import com.chengsheng.logistics.business.order.vo.OrderVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @program: logistics->ViewController
@@ -11,6 +20,9 @@ import org.springframework.web.bind.annotation.GetMapping;
  **/
 @Controller
 public class ViewController {
+
+    @Autowired
+    private OrderService orderService;
 
     /**
      * 登录页面
@@ -54,7 +66,7 @@ public class ViewController {
 
 
     /**
-     *@description  编辑页面展示
+     *@description  新增页面展示
      *@params  []
      *@return  java.lang.String
      *@author  Gu Yu Long
@@ -75,4 +87,32 @@ public class ViewController {
         return "user/edit";
     }
 
+
+    /**
+     * 编辑页面展示
+     * @return
+     */
+    @GetMapping("/home/order/editDetail")
+    public ModelAndView homeEditDetailOrder(HttpServletRequest request, HttpServletResponse response){
+        Map<String, Object> modelMap = new HashMap<>();
+        String idStr = request.getParameter("id");
+        int id = Integer.parseInt(idStr);
+        OrderVo result = orderService.getOrderInfoById(id);
+        modelMap.put("result",result);
+        return new ModelAndView("order/editDetail").addAllObjects(modelMap);
+    }
+
+    /**
+     * 支付页面展示
+     * @return
+     */
+    @GetMapping("/home/order/pay")
+    public ModelAndView homeOrderPay(HttpServletRequest request, HttpServletResponse response){
+        Map<String, Object> modelMap = new HashMap<>();
+        String idStr = request.getParameter("id");
+        int id = Integer.parseInt(idStr);
+        OrderVo result = orderService.getOrderPayInfoById(id);
+        modelMap.put("result",result);
+        return new ModelAndView("order/pay").addAllObjects(modelMap);
+    }
 }
