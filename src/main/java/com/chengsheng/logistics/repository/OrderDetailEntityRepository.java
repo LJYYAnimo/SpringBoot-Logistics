@@ -22,4 +22,8 @@ public interface OrderDetailEntityRepository extends JpaRepository<OrderDetailEn
     @Query("update OrderDetailEntity d set d.remove = 1, d.updateId = ?2, d.updateTime = ?3 where d.orderId=?1 ")
     void deleteByOrderId(Integer orderId, Integer updateId, Date updateTime);
 
+    @Modifying
+    @Query("update OrderDetailEntity d set d.remove = 1, d.updateId = ?2, d.updateTime = ?3 where d.id=?1 ")
+    void deleteById(Integer id, Integer updateId, Date updateTime);
+
 }

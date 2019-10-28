@@ -2,6 +2,7 @@ package com.chengsheng.logistics.business.order.service;
 
 import com.chengsheng.logistics.business.order.vo.OrderVo;
 import com.chengsheng.logistics.entity.OrderEntity;
+import com.chengsheng.logistics.entity.OrderPayEntity;
 import com.chengsheng.logistics.vo.LayuiVo;
 import com.chengsheng.logistics.vo.ServerResponseVo;
 import org.springframework.data.domain.Pageable;
@@ -58,4 +59,32 @@ public interface OrderService {
      *@other
      */
     ServerResponseVo delete(OrderEntity orderVo);
+
+    /**
+     * 按id查询订单信息
+     * @param id
+     * @return
+     */
+    OrderVo getOrderInfoById(int id);
+
+    /**
+     * 编辑保存订单
+     * @param orderVo
+     * @return
+     */
+    ServerResponseVo editOrder(OrderVo orderVo);
+
+    /**
+     * 获得支付信息和订单信息
+     * @param id
+     * @return
+     */
+    OrderVo getOrderPayInfoById(int id);
+
+    /**
+     * 保存支付记录
+     * @param orderPayEntity
+     * @return
+     */
+    ServerResponseVo savePay(OrderPayEntity orderPayEntity);
 }

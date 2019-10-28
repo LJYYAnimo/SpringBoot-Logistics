@@ -75,6 +75,7 @@
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="export">导出</a>
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="pay">支付</a>
 </script>
 <script type="text/javascript" src="/layui/layui.js"></script>
 <script type="text/javascript" src="/js/axios.min.js"></script>
@@ -170,8 +171,8 @@
                     layer.open({
                         type: 2,
                         title: '新建订单',
-                        shadeClose: true,
-                        shade: false,
+                        shadeClose: false,
+                        shade: 0.5,  //遮罩透明度
                         maxmin: true, //开启最大化最小化按钮
                         area: ['1200px', '600px'],
                         content: '/home/order/edit'
@@ -244,7 +245,25 @@
 
                 });
             } else if (obj.event === 'edit') {
-                layer.alert('编辑行：<br>' + JSON.stringify(data))
+                layer.open({
+                    type: 2,
+                    title: '编辑订单【'+data.orderNo+'】',
+                    shadeClose: false,
+                    shade: 0.5,  //遮罩透明度
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['1200px', '600px'],
+                    content: '/home/order/editDetail?id='+data.id
+                });
+            }else if (obj.event === 'pay'){
+                layer.open({
+                    type: 2,
+                    title: '【'+data.orderNo+'】支付记录',
+                    shadeClose: false,
+                    shade: 0.5,  //遮罩透明度
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['1200px', '600px'],
+                    content: '/home/order/pay?id='+data.id
+                });
             }
         });
 

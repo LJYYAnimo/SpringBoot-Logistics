@@ -3,6 +3,7 @@ package com.chengsheng.logistics.business.order.controller;
 import com.chengsheng.logistics.business.order.service.OrderService;
 import com.chengsheng.logistics.business.order.vo.OrderVo;
 import com.chengsheng.logistics.entity.OrderEntity;
+import com.chengsheng.logistics.entity.OrderPayEntity;
 import com.chengsheng.logistics.vo.LayuiVo;
 import com.chengsheng.logistics.vo.ServerResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,5 +101,25 @@ public class OrderController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
+    /**
+     * 修改订单
+     * @param orderVo
+     * @return
+     */
+    @PostMapping("/edit")
+    public ServerResponseVo editOrder(@RequestBody OrderVo orderVo){
+        return orderService.editOrder(orderVo);
+    }
+
+
+    /**
+     * 保存支付记录
+     * @param orderPayEntity
+     * @return
+     */
+    @PostMapping("/savePay")
+    public ServerResponseVo savePay(@RequestBody OrderPayEntity orderPayEntity){
+        return orderService.savePay(orderPayEntity);
+    }
 }
 
