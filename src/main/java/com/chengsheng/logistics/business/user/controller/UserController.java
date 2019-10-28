@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 /**
  * @author 刘金泳
  * @Date 2019/9/4
@@ -31,8 +29,7 @@ public class UserController {
 
     @PostMapping("save")
     public ServerResponseVo save(UserEntity userEntity){
-//        return userService.save(userEntity);
-        return null;
+        return userService.save(userEntity);
     }
 
 }

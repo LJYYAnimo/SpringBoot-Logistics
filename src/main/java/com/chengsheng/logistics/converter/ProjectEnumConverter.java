@@ -31,4 +31,5 @@ public class ProjectEnumConverter implements AttributeConverter<ProjectEnum,Inte
     public ProjectEnum convertToEntityAttribute(Integer code) {
         return ProjectEnum.getByCode(code);
     }
+
 }
