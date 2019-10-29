@@ -1,5 +1,6 @@
 package com.chengsheng.logistics.business.order.service;
 
+import com.chengsheng.logistics.business.order.entity.OrderMapperEntity;
 import com.chengsheng.logistics.business.order.vo.OrderVo;
 import com.chengsheng.logistics.entity.OrderEntity;
 import com.chengsheng.logistics.entity.OrderPayEntity;
@@ -87,4 +88,6 @@ public interface OrderService {
      * @return
      */
     ServerResponseVo savePay(OrderPayEntity orderPayEntity);
+
+    OrderMapperEntity testMapper(int id);
 }

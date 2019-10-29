@@ -1,5 +1,6 @@
 package com.chengsheng.logistics.business.order.controller;
 
+import com.chengsheng.logistics.business.order.entity.OrderMapperEntity;
 import com.chengsheng.logistics.business.order.service.OrderService;
 import com.chengsheng.logistics.business.order.vo.OrderVo;
 import com.chengsheng.logistics.entity.OrderEntity;
@@ -120,6 +121,11 @@ public class OrderController {
     @PostMapping("/savePay")
     public ServerResponseVo savePay(@RequestBody OrderPayEntity orderPayEntity){
         return orderService.savePay(orderPayEntity);
+    }
+
+    @GetMapping("/getOrder/{id}")
+    public OrderMapperEntity testMapper(@PathVariable int id){
+        return orderService.testMapper(id);
     }
 }
 

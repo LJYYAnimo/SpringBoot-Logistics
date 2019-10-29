@@ -1,5 +1,7 @@
 package com.chengsheng.logistics.business.order.service.impl;
 
+import com.chengsheng.logistics.business.order.entity.OrderMapperEntity;
+import com.chengsheng.logistics.business.order.mapper.OrderMapper;
 import com.chengsheng.logistics.business.order.service.OrderService;
 import com.chengsheng.logistics.business.order.vo.OrderExcelVo;
 import com.chengsheng.logistics.business.order.vo.OrderVo;
@@ -44,6 +46,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderPayEntityRepository orderPayEntityRepository;
+
+    @Autowired
+    private OrderMapper orderMapper;
 
     @Override
     public List<OrderEntity> view() {
@@ -355,6 +360,11 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
             return ServerResponseVo.createByError(e.getMessage());
         }
+    }
+
+    @Override
+    public OrderMapperEntity testMapper(int id) {
+        return orderMapper.findByOrderId(id);
     }
 
 }
