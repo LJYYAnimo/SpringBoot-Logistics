@@ -437,9 +437,9 @@
                 }
             }).then(function (response) {
                 if(response.data.type == 'SUCCESS'){
-                    layer.msg("编辑成功");
                     window.parent.location.reload();//刷新父页面
                     parent.layer.closeAll();
+                    layer.msg("编辑成功");
                     return false;
                 }
                 layer.msg(response.data.message);
@@ -447,10 +447,10 @@
             })
             .catch(function (error) {
                 console.log(error);
-                layer.msg(error)
+                layer.msg(error);
                 return false;
             });
-
+            return false;
         });
 
     });

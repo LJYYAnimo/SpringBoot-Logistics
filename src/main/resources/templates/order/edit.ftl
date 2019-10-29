@@ -14,7 +14,7 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body">
-                    <form class="layui-form">
+                    <form class="layui-form" >
                         <div class="layui-container">
                             <div class="layui-row">
                                 <div class="layui-col-md4">
@@ -394,10 +394,10 @@
             })
             .catch(function (error) {
                 console.log(error);
-                layer.msg(error)
+                layer.msg(error);
                 return false;
             });
-
+            return false;
         });
 
     });
